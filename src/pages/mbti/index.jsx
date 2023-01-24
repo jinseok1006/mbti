@@ -1,12 +1,12 @@
 import { createContext, useContext, useState } from 'react';
-import Question from './question';
+import Test from './test';
 import Result from './result';
 import Start from './start';
 
 const HandleUrlContext = createContext(null);
 
 export default function Index() {
-  const [url, setUrl] = useState('question');
+  const [url, setUrl] = useState('test');
 
   const handleUrl = (page) => {
     setUrl(page);
@@ -14,7 +14,7 @@ export default function Index() {
 
   const pages = {
     start: <Start />,
-    question: <Question />,
+    test: <Test />,
     result: <Result />,
   };
 

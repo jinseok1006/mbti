@@ -15,7 +15,7 @@ export default function Footer() {
         powered by react, vite
       </Typography>
       <Typography textAlign="center" variant="body2">
-        css by material design 2
+        너무만들기 귀찮다!!
       </Typography>
     </Box>
   );
