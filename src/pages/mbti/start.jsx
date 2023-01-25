@@ -14,7 +14,7 @@ export default function Start() {
           variant="contained"
           fullWidth
           sx={{ height: '50px', fontSize: '1.5rem' }}
-          onClick={() => handleUrl('question')}
+          onClick={() => handleUrl('test')}
         >
           검사 시작하기
         </Button>

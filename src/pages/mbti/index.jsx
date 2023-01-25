@@ -18,9 +18,16 @@ export default function Index() {
     result: <Result />,
   };
 
+  const openPage = () => {
+    if (!pages[url]) {
+      throw new Error(`Unhandled url ${url}`);
+    }
+    return pages[url];
+  };
+
   return (
     <HandleUrlContext.Provider value={handleUrl}>
-      {pages[url]}
+      {openPage()}
     </HandleUrlContext.Provider>
   );
 }

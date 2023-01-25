@@ -15,7 +15,7 @@ export default function Footer() {
         powered by react, vite
       </Typography>
       <Typography textAlign="center" variant="body2">
-        너무만들기 귀찮다!!
+        쓱싹쓱싹 빗자루임?
       </Typography>
     </Box>
   );
