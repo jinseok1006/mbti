@@ -6,7 +6,7 @@ import Start from './start';
 const HandleUrlContext = createContext(null);
 
 export default function Index() {
-  const [url, setUrl] = useState('test');
+  const [url, setUrl] = useState('start');
 
   const handleUrl = (page) => {
     setUrl(page);
