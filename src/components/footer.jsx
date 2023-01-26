@@ -12,11 +12,9 @@ export default function Footer() {
       }}
     >
       <Typography textAlign="center" variant="body2">
-        powered by react, vite
+        powered by react
       </Typography>
-      <Typography textAlign="center" variant="body2">
-        쓱싹쓱싹 빗자루임?
-      </Typography>
+      <Typography textAlign="center" variant="body2"></Typography>
     </Box>
   );
 }

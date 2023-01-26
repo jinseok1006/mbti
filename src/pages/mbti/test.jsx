@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Typography, LinearProgress, Slide } from '@mui/material';
+import {
+  Box,
+  Button,
+  Typography,
+  LinearProgress,
+  Fade,
+  CircularProgress,
+} from '@mui/material';
 
 import UrlButton from '@/components/urlButton';
-import { useHandleUrl } from '.';
 
-const options = ['매우 아니다', '아니다', '보통이다', '그렇다', '매우 그렇다'];
+import Questions from './questions';
 
-const questions = [
-  '나는 혼자있기를 좋아한다.',
+export const questionsString = [
+  '혼자있기를 좋아한다.',
   '주기적으로 새로운 친구를 만든다.',
   '자유 시간 중 상당 부분을 다양한 관심사를 탐구하는 데 할애한다.',
   '다른 사람이 울고 있는 모습을 보면 자신도 울고 싶어질 때가 많다.',
@@ -17,35 +23,10 @@ const questions = [
 ];
 
 export default function Test() {
-  const handleUrl = useHandleUrl();
-
-  const [collapse, setCollapse] = useState(false);
-
   const [number, setNumber] = useState(0);
 
-  const onCollapse = (handler) => {
-    setCollapse(false);
-    setTimeout(() => {
-      handler();
-      setCollapse(true);
-    }, 500);
-  };
-
-  const onNext = () => {
-    if (number < questions.length - 1) {
-      setNumber(number + 1);
-    } else {
-      handleUrl('result');
-    }
-  };
-  const onPrev = () => {
-    if (number > 0) {
-      setNumber(number - 1);
-    }
-  };
-
   const [answers, setAnswers] = useState(
-    Array.from({ length: questions.length }, (_, i) => null)
+    Array.from({ length: questionsString.length }, (_, i) => null)
   );
   const onAnswer = (e) => {
     const { name, value } = e.target;
@@ -55,36 +36,44 @@ export default function Test() {
         index === parseInt(name) ? value : answer
       )
     );
+    onNext();
+  };
 
-    onCollapse(onNext);
+  const onNext = () => {
+    if (number < questionsString.length) {
+      setNumber(number + 1);
+    }
+  };
+  const onPrev = () => {
+    if (number > 0) {
+      setNumber(number - 1);
+    }
   };
 
   useEffect(() => {
     console.log(answers);
   }, [answers]);
 
-  useEffect(() => {
-    setCollapse(true);
-  }, []);
-
   return (
     <Box>
       <Box sx={{ mt: 3, width: '360px', mx: 'auto' }}>
         <LinearProgress
           variant="determinate"
-          value={(number / questions.length) * 100}
+          value={(number / questionsString.length) * 100}
         />
       </Box>
-      <Slide direction="right" in={collapse} mountOnEnter unmountOnExit>
-        <Box>
-          <Question number={number} onAnswer={onAnswer} />
-        </Box>
-      </Slide>
+
+      {number !== questionsString.length ? (
+        <Questions number={number} onAnswer={onAnswer} />
+      ) : (
+        <Wait />
+      )}
+
       <Box sx={{ mt: 3, pt: 3 }}>
         <UrlButton variant="contained" color="secondary" url="start">
           start로 돌아가기
         </UrlButton>
-        <Button onClick={() => onCollapse(onPrev)} variant="contained">
+        <Button onClick={onPrev} variant="contained">
           이전 문항으로 돌아가기
         </Button>
       </Box>
@@ -92,27 +81,27 @@ export default function Test() {
   );
 }
 
-function Question({ number, onAnswer }) {
-  return (
-    <Box sx={{ mt: 6 }}>
-      <Typography variant="h5" textAlign="center" sx={{ pb: 5 }}>
-        {questions[number]}
-      </Typography>
+function Wait() {
+  const [wait, setWait] = useState(true);
 
-      <Box sx={{ width: '15rem', m: 'auto' }}>
-        {options.map((option, i) => (
-          <Button
-            key={i}
-            variant="contained"
-            fullWidth
-            sx={{ mt: 2 }}
-            name={number}
-            value={i}
-            onClick={onAnswer}
-          >
-            {option}
-          </Button>
-        ))}
+  // 만약 ssr인경우..
+  useEffect(() => {
+    setTimeout(() => setWait(false), 1500);
+  }, []);
+
+  return (
+    <Box mt={5}>
+      <Typography variant="h5" textAlign="center">
+        잠시만 기다려주세요...
+      </Typography>
+      <Box mt={2} display="flex" justifyContent="center">
+        {wait ? (
+          <CircularProgress />
+        ) : (
+          <UrlButton url="result" variant="contained">
+            결과 확인하기
+          </UrlButton>
+        )}
       </Box>
     </Box>
   );

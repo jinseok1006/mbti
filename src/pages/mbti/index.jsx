@@ -12,6 +12,7 @@ export default function Index() {
     setUrl(page);
   };
 
+  // react router 쓰는게 유리하지않을까;;
   const pages = {
     start: <Start />,
     test: <Test />,
