@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
-import {
-  Box,
-  Button,
-  Typography,
-  LinearProgress,
-  Collapse,
-} from '@mui/material';
+import { Box, Button, Typography, LinearProgress, Slide } from '@mui/material';
 
+import UrlButton from '@/components/urlButton';
 import { useHandleUrl } from '.';
 
 const options = ['매우 아니다', '아니다', '보통이다', '그렇다', '매우 그렇다'];
@@ -25,25 +20,28 @@ export default function Test() {
   const handleUrl = useHandleUrl();
 
   const [collapse, setCollapse] = useState(false);
-  const handleCollapse = () => {
-    setCollapse(false);
-    setTimeout(() => setCollapse(true), 500);
-  };
 
   const [number, setNumber] = useState(0);
+
+  const onCollapse = (handler) => {
+    setCollapse(false);
+    setTimeout(() => {
+      handler();
+      setCollapse(true);
+    }, 500);
+  };
+
   const onNext = () => {
     if (number < questions.length - 1) {
       setNumber(number + 1);
     } else {
       handleUrl('result');
     }
-    handleCollapse();
   };
   const onPrev = () => {
     if (number > 0) {
       setNumber(number - 1);
     }
-    handleCollapse();
   };
 
   const [answers, setAnswers] = useState(
@@ -58,7 +56,7 @@ export default function Test() {
       )
     );
 
-    onNext();
+    onCollapse(onNext);
   };
 
   useEffect(() => {
@@ -77,18 +75,16 @@ export default function Test() {
           value={(number / questions.length) * 100}
         />
       </Box>
-      <Collapse in={collapse} sx={{ justifyContent: 'center' }}>
-        <Question number={number} onAnswer={onAnswer} />
-      </Collapse>
+      <Slide direction="right" in={collapse} mountOnEnter unmountOnExit>
+        <Box>
+          <Question number={number} onAnswer={onAnswer} />
+        </Box>
+      </Slide>
       <Box sx={{ mt: 3, pt: 3 }}>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => handleUrl('start')}
-        >
+        <UrlButton variant="contained" color="secondary" url="start">
           start로 돌아가기
-        </Button>
-        <Button onClick={onPrev} variant="contained">
+        </UrlButton>
+        <Button onClick={() => onCollapse(onPrev)} variant="contained">
           이전 문항으로 돌아가기
         </Button>
       </Box>
